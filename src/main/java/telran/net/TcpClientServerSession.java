@@ -29,6 +29,7 @@ public class TcpClientServerSession implements Runnable {
             while (!server.executor.isShutdown() && !isIdleTimeout()) {
                 try {
                     request = reader.readLine();
+                    idleTimeout = 0;
                     if (request == null || isRequestsPerSecond()) {
                         break;
                     }

@@ -4,7 +4,7 @@ import java.net.*;
 import java.util.concurrent.*;
 
 public class TcpServer implements Runnable {
-    private static final int DEFAULT_SOCKET_TIMEOUT = 10;
+    private static final int DEFAULT_SOCKET_TIMEOUT = 100;
     private static final int DEFAULT_IDLE_CONNECTION_TIMEOUT = 60000;
     private static final int DEFAULT_LIMIT_REQUESTS_PER_SEC = 5;
     private static final int DEFAULT_LIMIT_NON_OK_RESPONSES_IN_ROW = 10;
@@ -46,9 +46,7 @@ public class TcpServer implements Runnable {
                     Socket socket = serverSocket.accept();
                     socket.setSoTimeout(socketTimeout);
                     var session = new TcpClientServerSession(protocol, socket, this);
-                    Thread thread = new Thread(session);
-
-                    thread.start();
+                    executor.execute(session);
                 } catch (SocketTimeoutException e) {
 
                 }
